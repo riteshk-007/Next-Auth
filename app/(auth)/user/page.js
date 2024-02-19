@@ -1,14 +1,18 @@
 "use client";
+import { createUser } from "@/app/Redux/User.Slice";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 
 const User = () => {
   const [variate, setVariate] = useState("LOGIN");
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -31,7 +35,8 @@ const User = () => {
       console.log("Login", data);
     }
     if (variate === "REGISTER") {
-      console.log("Register", data);
+      dispatch(createUser(data));
+      reset();
     }
   };
 
