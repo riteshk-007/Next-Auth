@@ -55,7 +55,6 @@ const User = () => {
       reset();
     }
   };
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

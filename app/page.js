@@ -1,3 +1,9 @@
+import UserInfo from "@/components/UserInfo";
+
 export default function Home() {
-  return <h1>hello word</h1>;
+  return (
+    <div className="w-full h-screen flex items-center justify-center">
+      <UserInfo />
+    </div>
+  );
 }
