@@ -1,7 +1,9 @@
 "use client";
-import { createUser } from "@/app/Redux/User.Slice";
+import { createUser, loginUser } from "@/app/Redux/User.Slice";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -9,6 +11,7 @@ import { useDispatch } from "react-redux";
 const User = () => {
   const [variate, setVariate] = useState("LOGIN");
   const dispatch = useDispatch();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -21,7 +24,6 @@ const User = () => {
       password: "",
     },
   });
-
   const toggleVariant = () => {
     if (variate === "LOGIN") {
       setVariate("REGISTER");
@@ -30,9 +32,23 @@ const User = () => {
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (variate === "LOGIN") {
-      console.log("Login", data);
+      try {
+        const res = await signIn("credentials", {
+          email: data.email,
+          password: data.password,
+          redirect: false,
+        });
+
+        if (res.error) {
+          throw new Error(res.error);
+        }
+
+        router.push("/");
+      } catch (error) {
+        console.error("An error occurred during sign in:", error.message);
+      }
     }
     if (variate === "REGISTER") {
       dispatch(createUser(data));
